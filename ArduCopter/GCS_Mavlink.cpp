@@ -300,7 +300,8 @@ void NOINLINE Copter::send_location(mavlink_channel_t chan)
         current_loc.lat,                // in 1E7 degrees
         current_loc.lng,                // in 1E7 degrees
         (ahrs.get_home().alt + current_loc.alt) * 10UL,      // millimeters above sea level
-        current_loc.alt * 10,           // millimeters above ground
+        //current_loc.alt * 10,           // millimeters above ground
+        dgps_alt*10,                       // DGPS altitude
         vel.x,                          // X speed cm/s (+ve North)
         vel.y,                          // Y speed cm/s (+ve East)
         vel.z,                          // Z speed cm/s (+ve up)

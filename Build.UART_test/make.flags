@@ -1,0 +1,1 @@
+// BUILDROOT=/home/hao/ardupilot/Build.UART_test HAL_BOARD=HAL_BOARD_PX4 HAL_BOARD_SUBTYPE= TOOLCHAIN=NATIVE EXTRAFLAGS=-DGIT_VERSION="b7d1e047" -I/home/hao/ardupilot/libraries/AP_Common/missing -DNUTTX_GIT_VERSION="579e82d4" -DPX4_GIT_VERSION="7fd7b2b1" -DUAVCAN=1 -DHAVE_STD_NULLPTR_T=0 -I/home/hao/ardupilot/Build.UART_test/libraries/GCS_MAVLink/include/mavlink

@@ -347,7 +347,16 @@ void AC_PosControl::calc_leash_length_z()
 // vel_up_max, vel_down_max should have already been set before calling this method
 void AC_PosControl::pos_to_rate_z()
 {
-    float curr_alt = _inav.get_altitude();
+    //float curr_alt = _inav.get_altitude();
+    float curr_alt = 0;
+    if(DGPS->getDGPSStatus()>1)
+    {
+        curr_alt = DGPS->getAltitude();
+    }
+    else
+    {
+        curr_alt = _inav.get_altitude();
+    }
 
     // clear position limit flags
     _limit.pos_up = false;
@@ -671,6 +680,13 @@ float AC_PosControl::time_since_last_xy_update() const
 {
     uint32_t now = AP_HAL::millis();
     return (now - _last_update_xy_ms)*0.001f;
+}
+
+
+void AC_PosControl::setDGPS(Z_DGPS* p)
+{
+    DGPS = p;
+    return;
 }
 
 /// init_vel_controller_xyz - initialise the velocity controller - should be called once before the caller attempts to use the controller

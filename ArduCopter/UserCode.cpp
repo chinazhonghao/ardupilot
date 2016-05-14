@@ -21,6 +21,24 @@ void Copter::userhook_FastLoop()
 void Copter::userhook_50Hz()
 {
     // put your 50Hz code here
+    DGPS.update();
+    
+   // hal.uartE->print(10.56,10);
+
+    if(DGPS.getDataIsOK())
+    {
+        dgps_alt = DGPS.getAltitude()*100;
+        //read data from serialPort E
+        /*hal.uartE->printf("FS\n");
+        hal.uartE->print(dgps_alt,10);
+        hal.uartE->printf("FE\n");*/
+    }
+    else
+    {
+        //hold the last altitude
+        dgps_alt = 150;
+    }
+    return;
 }
 #endif
 

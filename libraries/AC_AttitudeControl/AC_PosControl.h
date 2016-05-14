@@ -11,7 +11,7 @@
 #include "AC_AttitudeControl.h" // Attitude control library
 #include <AP_Motors/AP_Motors.h>          // motors library
 #include <AP_Vehicle/AP_Vehicle.h>         // common vehicle parameters
-
+#include <AP_DGPS/ZDGPS.h>
 
 // position controller default definitions
 #define POSCONTROL_THROTTLE_HOVER               0.5f    // default throttle required to maintain hover
@@ -288,6 +288,8 @@ public:
     float time_since_last_xy_update() const;
 
     static const struct AP_Param::GroupInfo var_info[];
+    void setDGPS(Z_DGPS* p);
+    Z_DGPS* DGPS;
 
 private:
 

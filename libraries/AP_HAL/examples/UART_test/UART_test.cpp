@@ -3,13 +3,14 @@
  */
 
 #include <AP_HAL/AP_HAL.h>
+#include <AP_DGPS/ZDGPS.h>
 
 #if HAL_OS_POSIX_IO
 #include <stdio.h>
 #endif
 
 const AP_HAL::HAL& hal = AP_HAL::get_HAL();
-
+Z_DGPS dgps;
 /*
   setup one UART at 57600
  */
@@ -19,7 +20,7 @@ static void setup_uart(AP_HAL::UARTDriver *uart, const char *name)
         // that UART doesn't exist on this platform
         return;
     }
-    uart->begin(57600);
+    uart->begin(115200);
 }
 
 
@@ -33,6 +34,7 @@ void setup(void)
     setup_uart(hal.uartC, "uartC"); // telemetry 1
     setup_uart(hal.uartD, "uartD"); // telemetry 2
     setup_uart(hal.uartE, "uartE"); // 2nd GPS
+    dgps.setSerialCom(hal.uartD);
 }
 
 static void test_uart(AP_HAL::UARTDriver *uart, const char *name)
@@ -50,16 +52,19 @@ void loop(void)
     test_uart(hal.uartA, "uartA");
     test_uart(hal.uartB, "uartB");
     test_uart(hal.uartC, "uartC");
-    test_uart(hal.uartD, "uartD");
-    test_uart(hal.uartE, "uartE");
+   // test_uart(hal.uartD, "uartD");
+   // test_uart(hal.uartE, "uartE");
 
     // also do a raw printf() on some platforms, which prints to the
     // debug console
 #if HAL_OS_POSIX_IO
     ::printf("Hello on debug console at %.3f seconds\n", AP_HAL::millis()*0.001f);
 #endif
-
-    hal.scheduler->delay(1000);
+    dgps.update();
+    hal.uartE->printf("DGPS\n");
+    hal.uartE->print(dgps.getAltitude(),10);
+    hal.uartE->printf("END\n");
+    hal.scheduler->delay(10);
 }
 
 AP_HAL_MAIN();

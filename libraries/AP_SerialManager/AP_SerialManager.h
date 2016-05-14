@@ -55,6 +55,11 @@
 #define AP_SERIALMANAGER_GPS_BUFSIZE_RX         256
 #define AP_SERIALMANAGER_GPS_BUFSIZE_TX         16
 
+//DGPS default baud rates and buffer sizes
+#define AP_SERIALMANAGER_DGPS_BAUD              115200
+#define AP_SERIALMANAGER_DGPS_BUFSIZE_RX        64
+#define AP_SERIALMANAGER_DGPS_BUFSIZE_TX        16
+
 // AlexMos Gimbal protocol default baud rates and buffer sizes
 #define AP_SERIALMANAGER_ALEXMOS_BAUD           115200
 #define AP_SERIALMANAGER_ALEXMOS_BUFSIZE_RX     128
@@ -81,6 +86,8 @@ public:
         SerialProtocol_AlexMos = 7,
         SerialProtocol_SToRM32 = 8,
         SerialProtocol_Lidar = 9,
+        
+        SerialProtocol_DGPS = 10,
     };
 
     // Constructor

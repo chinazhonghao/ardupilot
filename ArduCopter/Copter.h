@@ -90,6 +90,8 @@
 #include <AC_InputManager/AC_InputManager.h>        // Pilot input handling library
 #include <AC_InputManager/AC_InputManager_Heli.h>   // Heli specific pilot input handling library
 
+#include <AP_DGPS/ZDGPS.h>
+
 // Configuration
 #include "defines.h"
 #include "config.h"
@@ -166,6 +168,8 @@ private:
     AP_Int8 *flight_modes;
 
     AP_Baro barometer;
+    //adding DGPS class
+    Z_DGPS DGPS {serial_manager};
     Compass compass;
     AP_InertialSensor ins;
 
@@ -401,6 +405,7 @@ private:
     float target_sonar_alt;      // desired altitude in cm above the ground
     int32_t baro_alt;            // barometer altitude in cm above home
     float baro_climbrate;        // barometer climbrate in cm/s
+    int32_t dgps_alt;            // dgps altitude
     LowPassFilterVector3f land_accel_ef_filter; // accelerations for land and crash detector tests
 
     // filtered pilot's throttle input used to cancel landing if throttle held high

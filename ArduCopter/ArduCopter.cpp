@@ -162,8 +162,11 @@ void Copter::setup()
 
     // setup storage layout for copter
     StorageManager::set_layout_copter();
-
+    
     init_ardupilot();
+    DGPS.init();
+    //DGPS.calibrate();
+    pos_control.setDGPS(&DGPS);
 
     // initialise the main loop scheduler
     scheduler.init(&scheduler_tasks[0], ARRAY_SIZE(scheduler_tasks));
@@ -612,7 +615,7 @@ void Copter::update_altitude()
 {
     // read in baro altitude
     read_barometer();
-
+    hal.uartE->printf("alt\n");
     // read in sonar altitude
     sonar_alt           = read_sonar();
 

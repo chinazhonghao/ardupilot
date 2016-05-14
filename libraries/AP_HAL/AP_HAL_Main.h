@@ -18,10 +18,11 @@
 
 #if CONFIG_MAIN_WITHOUT_ARGC_ARGV
 
-#define AP_HAL_MAIN() extern "C" { \
+#define AP_HAL_MAIN() \
+    AP_HAL::HAL::FunCallbacks callbacks(setup, loop); \
+    extern "C" { \
     int AP_MAIN(void); \
     int AP_MAIN(void) { \
-        AP_HAL::HAL::FunCallbacks callbacks(setup, loop);       \
         hal.run(0, NULL, &callbacks); \
         return 0; \
     } \
