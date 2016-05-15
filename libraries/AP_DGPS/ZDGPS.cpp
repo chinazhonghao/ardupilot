@@ -72,6 +72,7 @@ void Z_DGPS::setData(uint8_t *data, const uint8_t len)
 void Z_DGPS::update()
 {
     getData();
+    hal.uartE->printf("\nalt=%.3f\n",_tempAlt);
     if(_dataIsOK)
     {
         _copy2DGPSStatus();

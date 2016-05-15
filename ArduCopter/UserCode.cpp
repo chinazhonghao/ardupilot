@@ -29,9 +29,9 @@ void Copter::userhook_50Hz()
     {
         dgps_alt = DGPS.getAltitude()*100;
         //read data from serialPort E
-        /*hal.uartE->printf("FS\n");
-        hal.uartE->print(dgps_alt,10);
-        hal.uartE->printf("FE\n");*/
+        //hal.uartE->printf("FS\n");
+        //hal.uartE->print(dgps_alt,10);
+        //hal.uartE->printf("FE\n");
     }
     else
     {
