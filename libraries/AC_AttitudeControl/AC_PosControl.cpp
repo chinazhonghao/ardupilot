@@ -349,9 +349,12 @@ void AC_PosControl::pos_to_rate_z()
 {
     //float curr_alt = _inav.get_altitude();
     float curr_alt = 0;
-    if(DGPS->getDGPSStatus()>1)
+    if(state >= 4)
     {
-        curr_alt = DGPS->getAltitude();
+        curr_alt = dgps_alt;
+        hal.uartE->print("Helle pos control");
+        hal.uartE->print(dgps_alt);
+        hal.uartE->print("alt is ok!");
     }
     else
     {

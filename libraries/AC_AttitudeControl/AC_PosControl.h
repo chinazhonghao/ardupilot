@@ -290,6 +290,8 @@ public:
     static const struct AP_Param::GroupInfo var_info[];
     void setDGPS(Z_DGPS* p);
     Z_DGPS* DGPS;
+    uint8_t state;
+    float dgps_alt;
 
 private:
 
