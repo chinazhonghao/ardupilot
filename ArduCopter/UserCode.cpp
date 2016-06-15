@@ -32,8 +32,19 @@ void Copter::userhook_50Hz()
         //hal.uartE->printf("FS\n");
         //hal.uartE->print(dgps_alt,10);
         //hal.uartE->printf("FE\n");
-        pos_control.state = DGPS.getDGPSStatus();
-        pos_control.dgps_alt = dgps_alt;
+        //pos_control.state = DGPS.getDGPSStatus();
+        //pos_control.dgps_alt = dgps_alt;
+        uint8_t state = DGPS.getDGPSStatus();
+        if(state >= 4)
+        {
+            hal.uartE->printf("hello state\n");
+            inertial_nav.state = state;
+            inertial_nav.dgps_alt = dgps_alt;
+        }
+        else
+        {
+            inertial_nav.state = 0;
+        }
     }
     else
     {
