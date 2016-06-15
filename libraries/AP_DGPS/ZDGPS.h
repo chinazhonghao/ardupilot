@@ -92,6 +92,7 @@ public:
 	{
 		return _dataIsOK;
 	}
+    float _groundAlt;
 
 private:
 	void _analyseData();
@@ -125,7 +126,6 @@ private:
     bool _isFloat;
 	uint8_t _tempLen;
     
-    float _groundAlt;
 
     uint8_t _tempState;
     uint8_t _tempNumSats;

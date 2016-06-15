@@ -23,20 +23,6 @@ Z_DGPS::Z_DGPS(const AP_SerialManager &serialManager):_serialManager(serialManag
 	_serialCom = NULL;
 }
 
-/*Z_DGPS::Z_DGPS()
-{
-	// TODO Auto-generated constructor stub
-	_nextMessage = DataPosition::HEAD;
-	_dataLen = 0;
-	_dataIsOK = false;
-	_tempNum = 0;
-	_floatLen = 0;
-	_isFloat = false;
-	_tempLen = 0;
-    _groundAlt = 0;
-	_serialCom = nullptr;
-}*/
-
 Z_DGPS::~Z_DGPS()
 {
 	// TODO Auto-generated destructor stub
@@ -72,7 +58,7 @@ void Z_DGPS::setData(uint8_t *data, const uint8_t len)
 void Z_DGPS::update()
 {
     getData();
-    hal.uartE->printf("\nalt=%.3f\n",_tempAlt);
+    //hal.uartE->printf("\nalt=%.3f\n",_tempAlt);
     if(_dataIsOK)
     {
         _copy2DGPSStatus();
@@ -103,7 +89,9 @@ void Z_DGPS::getData()
 void Z_DGPS::calibrate()
 {
     uint8_t tempNum = 0;
-    for(uint8_t i=0;i<10;i++)
+    _groundAlt = 0;
+    hal.uartE->print("DGPS calibrate start");
+    /*for(uint8_t i=0;i<3;i++)
     {
         getData();
         if(_dataIsOK)
@@ -111,10 +99,29 @@ void Z_DGPS::calibrate()
             _groundAlt += _tempAlt;
             tempNum++;
         }
+    }*/
+    while(true)
+    {
+        getData();
+        if(_dataIsOK)
+        {
+            _groundAlt += _tempAlt;
+            tempNum++;
+            if(tempNum>5)
+            {
+                break;
+            }
+        }
     }
     if(tempNum!=0)
     {
         _groundAlt /= tempNum;
+        hal.uartE->printf("groundAL=%f",_groundAlt);
+        hal.uartE->print("DGPS calibrate OK");
+    }
+    else
+    {
+        hal.uartE->print("DGPS calibrate is wrong!");
     }
     return;
 }
@@ -130,7 +137,6 @@ void Z_DGPS::_copy2DGPSStatus()
     return;
 }
 
-//对缓冲的数据使用状态机的方式读取
 void Z_DGPS::_analyseData()
 {
 	for (uint8_t i = 0; i < _dataLen; i++)
@@ -166,7 +172,6 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 		}
 		break;
 	case DataPosition::SATSTATE:
-		//当读到逗号时代表，卫星状态已经OK了
 		if (tempData == 0x2C)
 		{
 			_nextMessage = DataPosition::SATNUMBER;
@@ -175,16 +180,11 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 		}
 		else
 		{
-			//对数据的组合
             if(tempData>='0' && tempData<='9')
             {
                 tempData = tempData - '0';
                 _tempNum = _tempNum * 10 + tempData;
             }
-			/*if (_tempNum > 8)
-			{
-				_nextMessage = DataPosition::HEAD;
-			}*/
 		}
 		break;
 	case DataPosition::SATNUMBER:
@@ -198,16 +198,11 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 		}
 		else
 		{
-			//对数据的组合
             if(tempData>='0' && tempData<='9')
             {
                 tempData = tempData - '0';
                 _tempNum = _tempNum * 10 + tempData;
             }
-			/*if (_tempNum > 12)
-			{
-				_nextMessage = DataPosition::HEAD;
-			}*/
 		}
 		break;
 	case DataPosition::ALTITUDE:
@@ -225,7 +220,6 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 		}
 		else
 		{
-			//对数据的组合
 			if (tempData == 0x2E)
 			{
 				_isFloat = true;
@@ -262,7 +256,6 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 		}
 		else
 		{
-			//对数据的组合
 			if (_tempLen >= 2)
 			{
 				if (tempData == 0x2E || _tempLen == 2)
@@ -304,7 +297,6 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 		}
 		else
 		{
-			//对数据的组合
 			if (tempData == 0x4E)
 			{
 				_tempNEPos.N_Pos = SemispherePosition::N;
@@ -330,7 +322,6 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 		}
 		else
 		{
-			//对数据的组合
 			if (_tempLen >= 3)
 			{
 				if (tempData == 0x2E || _tempLen == 3)
@@ -372,7 +363,6 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 		}
 		else
 		{
-			//对数据的组合
 			if (tempData == 0x45)
 			{
 				_tempNEPos.E_Pos = SemispherePosition::E;
