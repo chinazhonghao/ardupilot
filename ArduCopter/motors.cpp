@@ -125,7 +125,7 @@ void Copter::auto_disarm_check()
 bool Copter::init_arm_motors(bool arming_from_gcs)
 {
     static bool in_arm_motors = false;
-    DGPS._groundAlt = 0;
+    //DGPS._groundAlt = 0;
     DGPS.calibrate();
 
     // exit immediately if already in this function
