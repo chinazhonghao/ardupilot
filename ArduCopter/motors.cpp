@@ -205,7 +205,10 @@ bool Copter::init_arm_motors(bool arming_from_gcs)
     perf_ignore_this_loop();
 
     // flag exiting this function
-    in_arm_motors = false;
+    in_arm_motors = false; 
+    
+    //DGPS restart
+    DGPS.calibrate();
 
     // return success
     return true;

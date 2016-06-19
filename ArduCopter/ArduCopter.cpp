@@ -165,7 +165,7 @@ void Copter::setup()
     
     init_ardupilot();
     DGPS.init();
-    DGPS.calibrate();
+    //DGPS.calibrate();
     pos_control.setDGPS(&DGPS);
 
     // initialise the main loop scheduler
