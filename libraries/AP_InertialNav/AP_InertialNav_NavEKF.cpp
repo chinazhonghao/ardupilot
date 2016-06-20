@@ -3,6 +3,8 @@
 #include <AP_HAL/AP_HAL.h>
 #include "AP_InertialNav.h"
 
+extern const AP_HAL::HAL& hal;
+
 #if AP_AHRS_NAVEKF_AVAILABLE
 
 /*
@@ -135,6 +137,14 @@ float AP_InertialNav_NavEKF::get_pos_z_derivative() const
  */
 float AP_InertialNav_NavEKF::get_altitude() const
 {
+    if (state >= 4)
+    {
+        hal.uartE->print("NavEKF DGPS OK");
+        hal.uartE->print(dgps_alt);
+        hal.uartE->print("NavEKF DGPS end");
+        //_relpos_cm.z = dgps_alt;
+        return dgps_alt;
+    }
     return _relpos_cm.z;
 }
 

@@ -15,6 +15,7 @@ Z_DGPS::Z_DGPS(const AP_SerialManager &serialManager):_serialManager(serialManag
 	_nextMessage = DataPosition::HEAD;
 	_dataLen = 0;
 	_dataIsOK = false;
+    _tempDataIsOK = false;
 	_tempNum = 0;
 	_floatLen = 0;
 	_isFloat = false;
@@ -70,7 +71,8 @@ void Z_DGPS::update()
 
 void Z_DGPS::getData()
 {
-	_dataIsOK = false;
+	//_dataIsOK = false;
+    _tempDataIsOK = false;
 	if (_serialCom != nullptr)
 	{
 		int16_t length = _serialCom->available();
@@ -107,7 +109,7 @@ void Z_DGPS::calibrate()
         {
             _groundAlt += _tempAlt;
             tempNum++;
-            if(tempNum>5)
+            if(tempNum>=5)
             {
                 break;
             }
@@ -376,10 +378,12 @@ void Z_DGPS::_analyseData(uint8_t tempData)
 	case DataPosition::CHECK:
 		if (tempData == 0xFA)
 		{
+            _tempDataIsOK = true;
 			_dataIsOK = true;
 		}
 		else
 		{
+            _tempDataIsOK = false;
 			_dataIsOK = false;
 		}
 		_nextMessage = DataPosition::HEAD;

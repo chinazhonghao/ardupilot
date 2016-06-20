@@ -121,6 +121,7 @@ private:
 	enum DataPosition _nextMessage;
 
 	bool _dataIsOK;
+    bool _tempDataIsOK;
 	uint32_t _tempNum;
 	uint8_t _floatLen;
     bool _isFloat;

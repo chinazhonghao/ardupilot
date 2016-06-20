@@ -23,6 +23,8 @@ public:
        update internal state
     */
     void        update(float dt);
+    uint8_t state;
+    float dgps_alt;
 
     /**
      * get_filter_status - returns filter status as a series of flags

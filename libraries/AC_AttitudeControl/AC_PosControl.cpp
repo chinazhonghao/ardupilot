@@ -349,17 +349,18 @@ void AC_PosControl::pos_to_rate_z()
 {
     //float curr_alt = _inav.get_altitude();
     float curr_alt = 0;
-    if(state >= 4)
+    /*if(state >= 4)
     {
         curr_alt = dgps_alt;
-        hal.uartE->print("Helle pos control");
+        //hal.uartE->print("Helle pos control");
         hal.uartE->print(dgps_alt);
-        hal.uartE->print("alt is ok!");
+        //hal.uartE->print("alt is ok!");
     }
     else
     {
         curr_alt = _inav.get_altitude();
-    }
+    }*/
+    curr_alt = _inav.get_altitude();
 
     // clear position limit flags
     _limit.pos_up = false;
