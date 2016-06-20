@@ -285,15 +285,9 @@ void AP_MotorsMatrix::output_armed_stabilizing()
         }
     }
 
-    hal.uartE->printf("Motor output\n");
-    for(i=0;i<AP_MOTORS_MAX_NUM_MOTORS;i++)
-    {
-        if(motor_enabled[i])
-        {
-            hal.uartE->print(_thrust_rpyt_out[i]*10);
-        }
-    }
-    hal.uartE->printf("Motor end\n");
+    hal.uartE->printf("MO\n");
+    hal.uartE->print(_thrust_rpyt_out[0]*10);
+    hal.uartE->printf("ME\n");
 }
 
 // output_test - spin a motor at the pwm value specified

@@ -37,7 +37,7 @@ void Copter::userhook_50Hz()
         uint8_t state = DGPS.getDGPSStatus();
         if(state >= 4)
         {
-            hal.uartE->printf("hello state\n");
+            hal.uartE->printf("RTK state\n");
             inertial_nav.state = state;
             inertial_nav.dgps_alt = dgps_alt;
         }

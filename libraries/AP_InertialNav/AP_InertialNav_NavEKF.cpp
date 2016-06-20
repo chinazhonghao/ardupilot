@@ -33,6 +33,14 @@ void AP_InertialNav_NavEKF::update(float dt)
         _velocity_cm.z = -_velocity_cm.z; // InertialNav is NEU
     }
 
+    /*if(state >= 4)
+    {
+        hal.uartE->printf("replace alt\n");
+        hal.uartE->print(dgps_alt);
+        hal.uartE->printf("replace end\n");
+        _relpos_cm.z = dgps_alt;
+    }*/
+
     // Get a derivative of the vertical position which is kinematically consistent with the vertical position is required by some control loops.
     // This is different to the vertical velocity from the EKF which is not always consistent with the verical position due to the various errors that are being corrected for.
     if (_ahrs_ekf.get_vert_pos_rate(_pos_z_rate)) {
@@ -139,12 +147,15 @@ float AP_InertialNav_NavEKF::get_altitude() const
 {
     if (state >= 4)
     {
-        hal.uartE->print("NavEKF DGPS OK");
+        hal.uartE->printf("r dgps alt\n");
         hal.uartE->print(dgps_alt);
-        hal.uartE->print("NavEKF DGPS end");
         //_relpos_cm.z = dgps_alt;
+        hal.uartE->printf("r dgps end\n");
         return dgps_alt;
     }
+   /* hal.uartE->printf("ori alt\n");
+    hal.uartE->print(_relpos_cm.z);
+    hal.uartE->print("end\n");*/
     return _relpos_cm.z;
 }
 
