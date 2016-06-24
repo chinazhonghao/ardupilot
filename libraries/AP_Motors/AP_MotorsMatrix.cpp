@@ -286,7 +286,14 @@ void AP_MotorsMatrix::output_armed_stabilizing()
     }
 
     hal.uartE->printf("MO\n");
-    hal.uartE->print(_thrust_rpyt_out[0]*10);
+    for (i=0;i<AP_MOTORS_MAX_NUM_MOTORS;i++)
+    {
+        if(motor_enabled[i])
+        {
+            hal.uartE->print(_thrust_rpyt_out[i]);
+            hal.uartE->printf(" ");
+        }
+    }
     hal.uartE->printf("ME\n");
 }
 

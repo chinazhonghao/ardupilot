@@ -118,7 +118,7 @@ void Z_DGPS::calibrate()
     if(tempNum!=0)
     {
         _groundAlt /= tempNum;
-        hal.uartE->printf("groundAL=%f",_groundAlt);
+        hal.uartE->printf("groundAlt=%f",_groundAlt);
         hal.uartE->print("DGPS calibrate OK");
     }
     else
