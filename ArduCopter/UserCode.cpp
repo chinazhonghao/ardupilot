@@ -14,6 +14,8 @@ void Copter::userhook_init()
 void Copter::userhook_FastLoop()
 {
     // put your 100Hz code here
+	// record some AHRS data
+	DataFlash.Log_Write_NAVIGATION(ahrs, nav_msg);
 }
 #endif
 

@@ -29,6 +29,8 @@
 
 #include "DFMessageWriter.h"
 
+#include "NavigationRecord.h"
+
 class DataFlash_Backend;
 
 enum DataFlash_Backend_Type {
@@ -116,6 +118,9 @@ public:
     void Log_Write_Baro(AP_Baro &baro, uint64_t time_us=0);
     void Log_Write_Power(void);
     void Log_Write_AHRS2(AP_AHRS &ahrs);
+
+	void Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg);
+
     void Log_Write_POS(AP_AHRS &ahrs);
 #if AP_AHRS_NAVEKF_AVAILABLE
     void Log_Write_EKF(AP_AHRS_NavEKF &ahrs, bool optFlowEnabled);

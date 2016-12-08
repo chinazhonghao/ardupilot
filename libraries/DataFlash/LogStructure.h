@@ -201,6 +201,18 @@ struct PACKED log_AHRS {
     int32_t lng;
 };
 
+// personal data record structure
+struct PACKED log_NAVIGATION {
+	LOG_PACKET_HEADER;
+	uint64_t time_us;
+	int16_t nav_roll;
+	int16_t nav_pitch;
+	uint16_t nav_yaw;
+	int16_t roll;
+	int16_t pitch;
+	uint16_t yaw;
+};
+
 struct PACKED log_POS {
     LOG_PACKET_HEADER;
     uint64_t time_us;
@@ -769,6 +781,8 @@ Format characters in the format string for binary log messages
       "IMU3",  "QffffffIIfBB",     "TimeUS,GyrX,GyrY,GyrZ,AccX,AccY,AccZ,ErrG,ErrA,Temp,GyHlt,AcHlt" }, \
     { LOG_AHR2_MSG, sizeof(log_AHRS), \
       "AHR2","QccCfLL","TimeUS,Roll,Pitch,Yaw,Alt,Lat,Lng" }, \
+	{ LOG_NAVIGATION_MSG, sizeof(log_NAVIGATION), \
+	  "NAVZ","QccCccC","TimeUS,nav_roll,nav_pitch,nav_yaw,roll,pitch,yaw"}, \
     { LOG_POS_MSG, sizeof(log_POS), \
       "POS","QLLff","TimeUS,Lat,Lng,Alt,RelAlt" }, \
     { LOG_SIMSTATE_MSG, sizeof(log_AHRS), \
@@ -998,6 +1012,8 @@ enum LogMessages {
     LOG_GIMBAL2_MSG,
     LOG_GIMBAL3_MSG,
     LOG_RATE_MSG,
+
+	LOG_NAVIGATION_MSG,
 };
 
 enum LogOriginType {
