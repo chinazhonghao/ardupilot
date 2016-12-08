@@ -77,6 +77,11 @@
 
 #define SCHED_TASK(func, rate_hz, max_time_micros) SCHED_TASK_CLASS(Copter, &copter, func, rate_hz, max_time_micros)
 
+// define a cycle queue for collect the data from telem2--hal.uartD
+uint8_t nav_buffer[256];
+uint8_t nav_buffer_header = 0x00;
+uint8_t gps_buffer_tail = 0x00;
+
 /*
   scheduler table for fast CPUs - all regular tasks apart from the fast_loop()
   should be listed here, along with how often they should be called (in hz)

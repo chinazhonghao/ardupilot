@@ -18,10 +18,16 @@ public:
 	void set_pitch(int16_t temp);
 	void set_yaw(uint16_t temp);
 
+	void update();
+
 private:
-	int16_t roll;
-	int16_t pitch;
-	uint16_t yaw;
+	void analysisMSG(uint8_t temp);
+
+	int16_t _roll;
+	int16_t _pitch;
+	uint16_t _yaw;
+
+	uint8_t _step;
 };
 
 #endif
