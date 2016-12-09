@@ -14,8 +14,10 @@ void Copter::userhook_init()
 void Copter::userhook_FastLoop()
 {
     // put your 100Hz code here
+	nav_msg.update();
 	// record some AHRS data
 	DataFlash.Log_Write_NAVIGATION(ahrs, nav_msg);
+	//hal.uartE->printf("r%d,p%d,y%ud\n",nav_msg.get_roll(),nav_msg.get_pitch(),nav_msg.get_yaw());
 }
 #endif
 

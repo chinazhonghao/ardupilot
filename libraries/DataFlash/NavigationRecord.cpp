@@ -12,6 +12,8 @@ NavigationMSG::NavigationMSG()
 	_t_roll = 0;
 	_t_pitch = 0;
 	_t_yaw = 0;
+	_t_count = false;
+	_t_parsed = false;
 }
 
 NavigationMSG::~NavigationMSG()
@@ -89,39 +91,47 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 		if(temp == ',')
 		{
 			_step = 0x01;
+			_t_count = 0;
 		}
 		else
 		{
 			_step = 0x00;
+			_t_count = 0;
 		}
 		break;
 	case 0x01:
-		if(temp==',')
+		if(temp==',' && _t_count==2)
 		{
+			_t_count = 0;
 			_step = 0x02;
 		}
 		else
 		{
+			_t_count++;
 			_t_roll = _t_roll * 256 + (int16_t)temp; 
 		}
 		break;
 	case 0x02:
-		if(temp==',')
+		if(temp==',' && _t_count==2)
 		{
 			_step = 0x03;
+			_t_count = 0;
 		}
 		else
 		{
+			_t_count++;
 			_t_pitch = _t_pitch * 256 + (int16_t)temp;
 		}
 		break;
 	case 0x03:
-		if(temp==',')
+		if(temp==',' && _t_count==2)
 		{
+			_t_count = 0;
 			_step = 0x04;
 		}
 		else
 		{
+			_t_count++;
 			_t_yaw = _t_yaw * 256 + (uint16_t)temp;
 		}
 		break;
@@ -132,6 +142,7 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 			_roll = _t_roll;
 			_pitch = _t_pitch;
 			_yaw = _t_yaw;
+			_t_count = 0;
 		}
 		else
 		{

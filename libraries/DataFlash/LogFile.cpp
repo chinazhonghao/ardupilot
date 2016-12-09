@@ -1107,9 +1107,9 @@ void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg
 	{
 		LOG_PACKET_HEADER_INIT(LOG_NAVIGATION_MSG),
 		time_us : AP_HAL::micros64(),
-		nav_roll : (int16_t)(degrees(nav_msg.get_roll())*100),
-		nav_pitch : (int16_t)(degrees(nav_msg.get_pitch())*100),
-		nav_yaw : (uint16_t)(degrees(nav_msg.get_yaw())*100),
+		nav_roll : (int16_t)(nav_msg.get_roll()),
+		nav_pitch : (int16_t)(nav_msg.get_pitch()),
+		nav_yaw : (uint16_t)(nav_msg.get_yaw()),
 		roll : (int16_t)(degrees(ahrs.roll)*100),
 		pitch : (int16_t)(degrees(ahrs.pitch)*100),
 		yaw : (uint16_t)(degrees(ahrs.yaw)*100)

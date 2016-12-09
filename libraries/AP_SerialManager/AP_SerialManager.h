@@ -68,6 +68,10 @@
 #define AP_SERIALMANAGER_NAV_BUFSIZE_RX         256
 #define AP_SERIALMANAGER_NAV_BUFSIZE_TX         16
 
+#define AP_SERIALMANAGER_DEBUG_BAUD             115200
+#define AP_SERIALMANAGER_DEBUG_BUFSIZE_RX       256
+#define AP_SERIALMANAGER_DEBUG_BUFSIZE_TX       16
+
 class AP_SerialManager {
 
 public:
@@ -86,6 +90,7 @@ public:
         SerialProtocol_Lidar = 9,
 
 		SerialProtocol_NAV = 10,
+		SerialProtocol_DEBUG = 11,
     };
 
     // Constructor

@@ -294,6 +294,7 @@ void Copter::fast_loop()
 	for(int16_t i = 0; i< data_num; i++)
 	{
 		nav_buffer[nav_buffer_tail++] = hal.uartD->read();
+		//hal.uartE->printf("%uc",nav_buffer[nav_buffer_tail-1]);
 	}
 }
 

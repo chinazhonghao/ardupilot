@@ -33,6 +33,7 @@ private:
 	int16_t _t_pitch;
 	uint16_t _t_yaw;
 	bool _t_parsed;
+	uint8_t _t_count;
 
 	uint8_t _step;
 };
