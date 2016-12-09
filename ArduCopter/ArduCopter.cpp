@@ -80,7 +80,7 @@
 // define a cycle queue for collect the data from telem2--hal.uartD
 uint8_t nav_buffer[256];
 uint8_t nav_buffer_header = 0x00;
-uint8_t gps_buffer_tail = 0x00;
+uint8_t nav_buffer_tail = 0x00;
 
 /*
   scheduler table for fast CPUs - all regular tasks apart from the fast_loop()
@@ -288,6 +288,13 @@ void Copter::fast_loop()
     if (should_log(MASK_LOG_ANY)) {
         Log_Sensor_Health();
     }
+
+	// here to collect the data from the telem2--hal.uartD
+	int16_t data_num = hal.uartD->available();
+	for(int16_t i = 0; i< data_num; i++)
+	{
+		nav_buffer[nav_buffer_tail++] = hal.uartD->read();
+	}
 }
 
 // rc_loops - reads user input from transmitter/receiver

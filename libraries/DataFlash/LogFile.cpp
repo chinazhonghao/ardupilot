@@ -1099,6 +1099,10 @@ void DataFlash_Class::Log_Write_AHRS2(AP_AHRS &ahrs)
 // personal navigation msg record
 void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg)
 {
+	if(!nav_msg.get_parsed())
+	{
+		return;
+	}
 	struct log_NAVIGATION pkt = 
 	{
 		LOG_PACKET_HEADER_INIT(LOG_NAVIGATION_MSG),
@@ -1110,6 +1114,7 @@ void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg
 		pitch : (int16_t)(degrees(ahrs.pitch)*100),
 		yaw : (uint16_t)(degrees(ahrs.yaw)*100)
 	};
+	nav_msg.set_parsed(false);
 	WriteBlock(&pkt, sizeof(pkt));
 }
 

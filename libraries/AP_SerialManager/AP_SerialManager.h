@@ -66,7 +66,7 @@
 
 #define AP_SERIALMANAGER_NAV_BAUD               115200
 #define AP_SERIALMANAGER_NAV_BUFSIZE_RX         256
-#define AP_SERIALMANAGER_NAV_BUFSIZE_Tx         16
+#define AP_SERIALMANAGER_NAV_BUFSIZE_TX         16
 
 class AP_SerialManager {
 
