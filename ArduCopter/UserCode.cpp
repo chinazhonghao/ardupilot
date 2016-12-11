@@ -17,6 +17,7 @@ void Copter::userhook_FastLoop()
 	nav_msg.update();
 	// record some AHRS data
 	DataFlash.Log_Write_NAVIGATION(ahrs, nav_msg);
+	DataFlash.Log_Write_NAVIGATIONVP(ahrs, nav_msg);
 	//hal.uartE->printf("r%d,p%d,y%ud\n",nav_msg.get_roll(),nav_msg.get_pitch(),nav_msg.get_yaw());
 }
 #endif
