@@ -1014,6 +1014,9 @@ void AP_InertialSensor::update(void)
     }
 
     _have_sample = false;
+
+	// test for g direction
+	hal.uartE->printf("x%.2f,y%.2f,z%.2f\r\n",get_accel().x,get_accel().y,get_accel().z);
 }
 
 /*

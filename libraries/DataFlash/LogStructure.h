@@ -213,6 +213,34 @@ struct PACKED log_NAVIGATION {
 	uint16_t yaw;
 };
 
+struct PACKED log_NAVIGATION_VP {
+	LOG_PACKET_HEADER;
+	uint64_t time_us;
+	float nav_vx;
+	float nav_vy;
+	float nav_vz;
+	float nav_px;
+	float nav_py;
+	float nav_pz;
+	float vx;
+	float vy;
+	float vz;
+	float px;
+	float py;
+	float pz;
+};
+
+struct PACKED log_NAVIGATION_GPS {
+	LOG_PACKET_HEADER;
+	uint64_t time_us;
+	int32_t nav_lat;
+	int32_t nav_lng;
+	int32_t nav_alt;
+	float nav_gx;
+	float nav_gy;
+	float nav_gz;
+};
+
 struct PACKED log_POS {
     LOG_PACKET_HEADER;
     uint64_t time_us;
@@ -783,6 +811,10 @@ Format characters in the format string for binary log messages
       "AHR2","QccCfLL","TimeUS,Roll,Pitch,Yaw,Alt,Lat,Lng" }, \
 	{ LOG_NAVIGATION_MSG, sizeof(log_NAVIGATION), \
 	  "NAVZ","QccCccC","TimeUS,nav_roll,nav_pitch,nav_yaw,roll,pitch,yaw"}, \
+	{ LOG_NAVIGATIONVP_MSG, sizeof(log_NAVIGATION_VP), \
+	  "NAVP","Qffffffffffff","TimeUS,nvx,nvy,nvz,nx,ny,nz,vx,vy,vz,x,y,z"}, \
+	{ LOG_NAVIGATIONGPS_MSG, sizeof(log_NAVIGATION_GPS), \
+	  "NGPS","QLLLfff","TimeUS,nlat,nlng,nalt,nvx,nvy,nvz"}, \
     { LOG_POS_MSG, sizeof(log_POS), \
       "POS","QLLff","TimeUS,Lat,Lng,Alt,RelAlt" }, \
     { LOG_SIMSTATE_MSG, sizeof(log_AHRS), \
@@ -1014,6 +1046,8 @@ enum LogMessages {
     LOG_RATE_MSG,
 
 	LOG_NAVIGATION_MSG,
+	LOG_NAVIGATIONVP_MSG,
+	LOG_NAVIGATIONGPS_MSG,
 };
 
 enum LogOriginType {

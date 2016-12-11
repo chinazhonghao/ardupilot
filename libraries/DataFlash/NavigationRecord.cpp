@@ -9,6 +9,18 @@ NavigationMSG::NavigationMSG()
 	_roll = 0;
 	_pitch = 0;
 	_yaw = 0;
+	_vx = 0.0;
+	_vy = 0.0;
+	_vz = 0.0;
+	_x = 0.0;
+	_y = 0.0;
+	_z = 0.0;
+	_lat = 0;
+	_lng = 0;
+	_alt = 0;
+	_gx = 0;
+	_gy = 0;
+	_gz = 0;
 	_t_roll = 0;
 	_t_pitch = 0;
 	_t_yaw = 0;
@@ -136,6 +148,84 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 		}
 		break;
 	case 0x04:
+		if(temp==',' && _t_count==4)
+		{
+			_t_count = 0;
+			_vx = _buffer._data;
+			_step = 0x05;
+		}
+		else
+		{
+			_buffer.bytes[_t_count] = temp;
+			_t_count++;
+		}
+		break;
+	case 0x05:
+		if(temp==',' && _t_count==4)
+		{
+			_t_count = 0;
+			_vy = _buffer._data;
+			_step = 0x06;
+		}
+		else
+		{
+			_buffer.bytes[_t_count] = temp;
+			_t_count++;
+		}
+		break;
+	case 0x06:
+		if(temp==',' && _t_count==4)
+		{
+			_t_count = 0;
+			_vz = _buffer._data;
+			_step = 0x07;
+		}
+		else
+		{
+			_buffer.bytes[_t_count] = temp;
+			_t_count++;
+		}
+		break;
+	case 0x07:
+		if(temp==',' && _t_count==4)
+		{
+			_t_count = 0;
+			_x = _buffer._data;
+			_step = 0x08;
+		}
+		else
+		{
+			_buffer.bytes[_t_count] = temp;
+			_t_count++;
+		}
+		break;
+	case 0x08:
+		if(temp==',' && _t_count==4)
+		{
+			_t_count = 0;
+			_y = _buffer._data;
+			_step = 0x09;
+		}
+		else
+		{
+			_buffer.bytes[_t_count] = temp;
+			_t_count++;
+		}
+		break;
+	case 0x09:
+		if(temp==',' && _t_count==4)
+		{
+			_t_count = 0;
+			_z = _buffer._data;
+			_step = 0xFA;
+		}
+		else
+		{
+			_buffer.bytes[_t_count] = temp;
+			_t_count++;
+		}
+		break;
+	case 0xFA:
 		if(temp==0xFA)
 		{
 			_t_parsed = true;

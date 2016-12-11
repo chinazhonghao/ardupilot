@@ -1114,7 +1114,57 @@ void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg
 		pitch : (int16_t)(degrees(ahrs.pitch)*100),
 		yaw : (uint16_t)(degrees(ahrs.yaw)*100)
 	};
+	WriteBlock(&pkt, sizeof(pkt));
+}
+
+void DataFlash_Class::Log_Write_NAVIGATIONVP(AP_AHRS_NavEKF &ahrs, NavigationMSG &nav_msg)
+{
+	if(!nav_msg.get_parsed())
+	{
+		return;
+	}
+	Vector3f velNED;
+	Vector3f posNED;
+	ahrs.get_NavEKF().getVelNED(velNED);
+	ahrs.get_NavEKF().getPosNED(posNED);
+	struct log_NAVIGATION_VP pkt =
+	{
+		LOG_PACKET_HEADER_INIT(LOG_NAVIGATIONVP_MSG),
+		time_us : AP_HAL::micros64(),
+		nav_vx : nav_msg.get_vx(),
+		nav_vy : nav_msg.get_vy(),
+		nav_vz : nav_msg.get_vz(),
+		nav_px : nav_msg.get_x(),
+		nav_py : nav_msg.get_y(),
+		nav_pz : nav_msg.get_z(),
+		vx : velNED.x,
+		vy : velNED.y,
+		vz : velNED.z,
+		px : posNED.x,
+		py : posNED.y,
+		pz : posNED.z
+	};
 	nav_msg.set_parsed(false);
+	WriteBlock(&pkt, sizeof(pkt));
+}
+
+void DataFlash_Class::Log_Write_NAVIGATIONGPS(NavigationMSG &nav_msg)
+{
+	if(!nav_msg.get_parsed())
+	{
+		return;
+	}
+	struct log_NAVIGATION_GPS pkt =
+	{
+		LOG_PACKET_HEADER_INIT(LOG_NAVIGATIONGPS_MSG),
+		time_us : AP_HAL::micros64(),
+		nav_lat : nav_msg.get_lat(),
+		nav_lng : nav_msg.get_lng(),
+		nav_alt : nav_msg.get_alt(),
+		nav_gx : nav_msg.get_gx(),
+		nav_gy : nav_msg.get_gy(),
+		nav_gz : nav_msg.get_gz()
+	};
 	WriteBlock(&pkt, sizeof(pkt));
 }
 
