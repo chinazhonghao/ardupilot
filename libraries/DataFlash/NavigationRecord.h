@@ -2,6 +2,7 @@
 #define NAVIGATIONRECORD
 
 #include "stdio.h"
+#include <AP_Common/AP_Common.h>
 
 // define the structure to store the data
 class NavigationMSG
@@ -37,10 +38,20 @@ public:
 
 	void update();
 
+	struct PACKED floatData
+	{
+		float vx;
+		float vy;
+		float vz;
+		float x;
+		float y;
+		float z;
+	};
+
 	union PACKED
 	{
-		float _data;
-		uint8_t bytes[];
+		struct floatData data;
+		uint8_t bytes[sizeof(struct floatData)];
 	}_buffer;
 
 private:

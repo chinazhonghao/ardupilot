@@ -149,8 +149,8 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 		if(temp==',' && _t_count==2)
 		{
 			_t_count = 0;
-			//_step = 0x04;
-			_step = 0xFA;
+			_step = 0x04;
+			//_step = 0xFA;
 		}
 		else
 		{
@@ -158,6 +158,17 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 			_t_yaw = _t_yaw * 256 + (uint16_t)temp;
 		}
 		break;
+	case 0x04:
+		if(temp==',' && _t_count==sizeof(struct floatData))
+		{
+			_t_count = 0;
+			_step = 0xFA;
+		}
+		else
+		{
+			_buffer.bytes[_t_count] = temp;
+			_t_count++;
+		}
 	/*case 0x04:
 		if(temp==',' && _t_count==4)
 		{
@@ -243,6 +254,12 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 			_roll = _t_roll;
 			_pitch = _t_pitch;
 			_yaw = _t_yaw;
+			_vx = _buffer.data.vx;
+			_vy = _buffer.data.vy;
+			_vz = _buffer.data.vz;
+			_x = _buffer.data.x;
+			_y = _buffer.data.y;
+			_z = _buffer.data.z;
 			_t_count = 0;
 		}
 		else
