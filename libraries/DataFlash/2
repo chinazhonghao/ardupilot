@@ -1,10 +1,5 @@
 #include "NavigationRecord.h"
 
-#include "DataFlash_Backend.h"
-#include "DFMessageWriter.h"
-
-extern const AP_HAL::HAL& hal;
-
 extern uint8_t nav_buffer[256];
 extern uint8_t nav_buffer_header;
 extern uint8_t nav_buffer_tail;
@@ -80,9 +75,7 @@ void NavigationMSG::update()
 {
 	while(nav_buffer_header != nav_buffer_tail)
 	{
-		analysisMSG(nav_buffer[nav_buffer_header]);
-		//hal.uartE->printf("s%x,d%x ",_step,nav_buffer[nav_buffer_header]);
-		nav_buffer_header = (nav_buffer_header+1)%512;
+		analysisMSG(nav_buffer[nav_buffer_header++]);
 	}
 	return;
 }
@@ -97,16 +90,14 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 {
 	switch(_step)
 	{
-	case 0x00:
+	case 0:
 		if(temp == 0xFF)
 		{
 			_step = 0xFF;
-			_t_count = 0;
 		}
 		else
 		{
 			_step = 0x00;
-			_t_count = 0;
 		}
 		break;
 	case 0xFF:
@@ -149,8 +140,7 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 		if(temp==',' && _t_count==2)
 		{
 			_t_count = 0;
-			//_step = 0x04;
-			_step = 0xFA;
+			_step = 0x04;
 		}
 		else
 		{
@@ -158,7 +148,7 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 			_t_yaw = _t_yaw * 256 + (uint16_t)temp;
 		}
 		break;
-	/*case 0x04:
+	case 0x04:
 		if(temp==',' && _t_count==4)
 		{
 			_t_count = 0;
@@ -235,7 +225,7 @@ void NavigationMSG::analysisMSG(uint8_t temp)
 			_buffer.bytes[_t_count] = temp;
 			_t_count++;
 		}
-		break;*/
+		break;
 	case 0xFA:
 		if(temp==0xFA)
 		{
