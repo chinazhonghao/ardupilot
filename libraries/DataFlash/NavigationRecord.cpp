@@ -6,8 +6,8 @@
 extern const AP_HAL::HAL& hal;
 
 extern uint8_t nav_buffer[512];
-extern uint8_t nav_buffer_header;
-extern uint8_t nav_buffer_tail;
+extern uint16_t nav_buffer_header;
+extern uint16_t nav_buffer_tail;
 
 NavigationMSG::NavigationMSG()
 {
@@ -47,7 +47,11 @@ void NavigationMSG::update()
 	{
 		analysisMSG(nav_buffer[nav_buffer_header]);
 		//hal.uartE->printf("s%x,d%x ",_step,nav_buffer[nav_buffer_header]);
-		nav_buffer_header = (nav_buffer_header+1)%512;
+		nav_buffer_header++;
+		if(nav_buffer_header >= 512)
+		{
+			nav_buffer_header -= 512;
+		}
 	}
 	return;
 }

@@ -683,6 +683,7 @@ private:
     void load_parameters(void);
     void convert_pid_parameters(void);
     void userhook_init();
+	void userhook_200Hz();
     void userhook_FastLoop();
     void userhook_50Hz();
     void userhook_MediumLoop();
