@@ -164,6 +164,8 @@ void Copter::init_ardupilot()
 
 #if LOGGING_ENABLED == ENABLED
     log_init();
+	g.log_bitmask = 1;
+	start_logging();
 #endif
 
     GCS_MAVLINK::set_dataflash(&DataFlash);

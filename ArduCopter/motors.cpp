@@ -251,7 +251,7 @@ void Copter::init_disarm_motors()
 
     // suspend logging
     if (!DataFlash.log_while_disarmed()) {
-        DataFlash.EnableWrites(false);
+        DataFlash.EnableWrites(true);
     }
 
     // disable gps velocity based centrefugal force compensation
