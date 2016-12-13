@@ -1097,7 +1097,7 @@ void DataFlash_Class::Log_Write_AHRS2(AP_AHRS &ahrs)
 }
 
 // personal navigation msg record
-void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg)
+void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS_NavEKF &ahrs, NavigationMSG &nav_msg)
 {
 	if(!nav_msg.is_attitude_parsed())
 	{
@@ -1112,8 +1112,9 @@ void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg
 		nav_yaw : (uint16_t)(nav_msg.get_yaw()),
 		roll : (int16_t)(degrees(ahrs.roll)*100),
 		pitch : (int16_t)(degrees(ahrs.pitch)*100),
-		yaw : (uint16_t)(degrees(ahrs.yaw)*100)
+		yaw : (uint16_t)(wrap_360_cd(degrees(ahrs.yaw)*100))
 	};
+	hal.uartE->printf("yaw%.2f\n",ahrs.yaw*57.3);
 	nav_msg.set_attitude_parsed(false);
 	WriteBlock(&pkt, sizeof(pkt));
 }

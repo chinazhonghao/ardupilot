@@ -119,7 +119,7 @@ public:
     void Log_Write_Power(void);
     void Log_Write_AHRS2(AP_AHRS &ahrs);
 
-	void Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg);
+	void Log_Write_NAVIGATION(AP_AHRS_NavEKF &ahrs, NavigationMSG &nav_msg);
 	void Log_Write_NAVIGATIONVP(AP_AHRS_NavEKF &ahrs, NavigationMSG &nav_msg);
 	void Log_Write_NAVIGATIONGPS(NavigationMSG &nav_msg);
 
