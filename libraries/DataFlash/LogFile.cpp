@@ -1099,7 +1099,7 @@ void DataFlash_Class::Log_Write_AHRS2(AP_AHRS &ahrs)
 // personal navigation msg record
 void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg)
 {
-	if(!nav_msg.get_parsed())
+	if(!nav_msg.is_attitude_parsed())
 	{
 		return;
 	}
@@ -1114,12 +1114,13 @@ void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS &ahrs, NavigationMSG &nav_msg
 		pitch : (int16_t)(degrees(ahrs.pitch)*100),
 		yaw : (uint16_t)(degrees(ahrs.yaw)*100)
 	};
+	nav_msg.set_attitude_parsed(false);
 	WriteBlock(&pkt, sizeof(pkt));
 }
 
 void DataFlash_Class::Log_Write_NAVIGATIONVP(AP_AHRS_NavEKF &ahrs, NavigationMSG &nav_msg)
 {
-	if(!nav_msg.get_parsed())
+	if(!nav_msg.is_pos_parsed())
 	{
 		return;
 	}
@@ -1144,16 +1145,12 @@ void DataFlash_Class::Log_Write_NAVIGATIONVP(AP_AHRS_NavEKF &ahrs, NavigationMSG
 		py : posNED.y,
 		pz : posNED.z
 	};
-	nav_msg.set_parsed(false);
+	nav_msg.set_pos_parsed(false);
 	WriteBlock(&pkt, sizeof(pkt));
 }
 
 void DataFlash_Class::Log_Write_NAVIGATIONGPS(NavigationMSG &nav_msg)
 {
-	if(!nav_msg.get_parsed())
-	{
-		return;
-	}
 	struct log_NAVIGATION_GPS pkt =
 	{
 		LOG_PACKET_HEADER_INIT(LOG_NAVIGATIONGPS_MSG),

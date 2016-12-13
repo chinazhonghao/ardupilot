@@ -5,7 +5,7 @@
 
 extern const AP_HAL::HAL& hal;
 
-extern uint8_t nav_buffer[256];
+extern uint8_t nav_buffer[512];
 extern uint8_t nav_buffer_header;
 extern uint8_t nav_buffer_tail;
 
@@ -26,54 +26,19 @@ NavigationMSG::NavigationMSG()
 	_gx = 0;
 	_gy = 0;
 	_gz = 0;
-	_t_roll = 0;
-	_t_pitch = 0;
-	_t_yaw = 0;
-	_t_count = false;
-	_t_parsed = false;
+	_attitude_parsed = false;
+	_pos_parsed = false;
 	_step = 0x00;
+	_class = 0x00;
+	_msg_id = 0x00;
+	_ck_a = 0x00;
+	_ck_b = 0x00;
+	_payload_length = 0x00;
+	_payload_counter = 0x00;
 }
 
 NavigationMSG::~NavigationMSG()
 {}
-
-int16_t NavigationMSG::get_roll()
-{
-	return _roll;
-}
-
-int16_t NavigationMSG::get_pitch()
-{
-	return _pitch;
-}
-
-uint16_t NavigationMSG::get_yaw()
-{
-	return _yaw;
-}
-
-bool NavigationMSG::get_parsed()
-{
-	return _t_parsed;
-}
-
-void NavigationMSG::set_roll(int16_t temp)
-{
-	_roll = temp;
-	return;
-}
-
-void NavigationMSG::set_pitch(int16_t temp)
-{
-	_pitch = temp;
-	return;
-}
-
-void NavigationMSG::set_yaw(uint16_t temp)
-{
-	_yaw = temp;
-	return;
-}
 
 // get data from the nav_buffer queue
 void NavigationMSG::update()
@@ -87,187 +52,109 @@ void NavigationMSG::update()
 	return;
 }
 
-void NavigationMSG::set_parsed(bool temp)
-{
-	_t_parsed = temp;
-	return;
-}
-
 void NavigationMSG::analysisMSG(uint8_t temp)
 {
+reset:
 	switch(_step)
 	{
-	case 0x00:
-		if(temp == 0xFF)
-		{
-			_step = 0xFF;
-			_t_count = 0;
-		}
-		else
-		{
-			_step = 0x00;
-			_t_count = 0;
-		}
-		break;
-	case 0xFF:
-		if(temp == ',')
-		{
-			_step = 0x01;
-			_t_count = 0;
-		}
-		else
-		{
-			_step = 0x00;
-			_t_count = 0;
-		}
-		break;
 	case 0x01:
-		if(temp==',' && _t_count==2)
+		if(PREAMBLE2 == temp)
 		{
-			_t_count = 0;
-			_step = 0x02;
+			_step++;
+			break;
 		}
-		else
+		_step = 0;
+		// no break
+	case 0x00:
+		if(PREAMBLE1 == temp)
 		{
-			_t_count++;
-			_t_roll = _t_roll * 256 + (int16_t)temp; 
+			_step++;
 		}
 		break;
 	case 0x02:
-		if(temp==',' && _t_count==2)
-		{
-			_step = 0x03;
-			_t_count = 0;
-		}
-		else
-		{
-			_t_count++;
-			_t_pitch = _t_pitch * 256 + (int16_t)temp;
-		}
+		_step++;
+		_class = temp;
+		_ck_a = temp;
+		_ck_b = _ck_a;
 		break;
 	case 0x03:
-		if(temp==',' && _t_count==2)
-		{
-			_t_count = 0;
-			_step = 0x04;
-			//_step = 0xFA;
-		}
-		else
-		{
-			_t_count++;
-			_t_yaw = _t_yaw * 256 + (uint16_t)temp;
-		}
+		_step++;
+		_msg_id = temp;
+		_ck_a += temp;
+		_ck_b += _ck_a;
 		break;
 	case 0x04:
-		if(temp==',' && _t_count==sizeof(struct floatData))
-		{
-			_t_count = 0;
-			_step = 0xFA;
-		}
-		else
-		{
-			_buffer.bytes[_t_count] = temp;
-			_t_count++;
-		}
-	/*case 0x04:
-		if(temp==',' && _t_count==4)
-		{
-			_t_count = 0;
-			_vx = _buffer._data;
-			_step = 0x05;
-		}
-		else
-		{
-			_buffer.bytes[_t_count] = temp;
-			_t_count++;
-		}
+		_step++;
+		_ck_a += temp;
+		_ck_b += _ck_a;
+		_payload_length = temp;
 		break;
 	case 0x05:
-		if(temp==',' && _t_count==4)
+		_step++;
+		_ck_a += temp;
+		_ck_b += _ck_a;
+		_payload_length += (uint16_t)(temp<<8);
+		if(_payload_length > sizeof(_buffer))
 		{
-			_t_count = 0;
-			_vy = _buffer._data;
-			_step = 0x06;
+			_payload_length = 0x00;
+			_step = 0x00;
+			goto reset;
 		}
-		else
-		{
-			_buffer.bytes[_t_count] = temp;
-			_t_count++;
-		}
+		_payload_counter = 0x00;
 		break;
 	case 0x06:
-		if(temp==',' && _t_count==4)
+		_ck_a += temp;
+		_ck_b += _ck_a;
+		if(_payload_counter < sizeof(_buffer))
 		{
-			_t_count = 0;
-			_vz = _buffer._data;
-			_step = 0x07;
+			_buffer.bytes[_payload_counter] = temp;
 		}
-		else
+		if(++_payload_counter == _payload_length)
 		{
-			_buffer.bytes[_t_count] = temp;
-			_t_count++;
+			_step++;
 		}
 		break;
 	case 0x07:
-		if(temp==',' && _t_count==4)
+		_step++;
+		if(_ck_a != temp)
 		{
-			_t_count = 0;
-			_x = _buffer._data;
-			_step = 0x08;
-		}
-		else
-		{
-			_buffer.bytes[_t_count] = temp;
-			_t_count++;
+			_step = 0x00;
+			goto reset;
 		}
 		break;
 	case 0x08:
-		if(temp==',' && _t_count==4)
-		{
-			_t_count = 0;
-			_y = _buffer._data;
-			_step = 0x09;
-		}
-		else
-		{
-			_buffer.bytes[_t_count] = temp;
-			_t_count++;
-		}
-		break;
-	case 0x09:
-		if(temp==',' && _t_count==4)
-		{
-			_t_count = 0;
-			_z = _buffer._data;
-			_step = 0xFA;
-		}
-		else
-		{
-			_buffer.bytes[_t_count] = temp;
-			_t_count++;
-		}
-		break;*/
-	case 0xFA:
-		if(temp==0xFA)
-		{
-			_t_parsed = true;
-			_roll = _t_roll;
-			_pitch = _t_pitch;
-			_yaw = _t_yaw;
-			_vx = _buffer.data.vx;
-			_vy = _buffer.data.vy;
-			_vz = _buffer.data.vz;
-			_x = _buffer.data.x;
-			_y = _buffer.data.y;
-			_z = _buffer.data.z;
-			_t_count = 0;
-		}
-		else
-		{
-			_t_parsed = false;
-		}
 		_step = 0x00;
+		if(_ck_b != temp)
+		{
+			break;
+		}
+		if(_parse_navigation())
+		{
+			_attitude_parsed = true;
+			_pos_parsed = true;
+		}
 		break;
 	}
 	return;
+}
+
+bool NavigationMSG::_parse_navigation()
+{
+	if(_class == CLASS_NAV)
+	{
+		if(_msg_id == MSG_NAV_MSG)
+		{
+			_roll = _buffer.data.roll;
+			_pitch = _buffer.data.pitch;
+			_yaw = _buffer.data.yaw;
+			_vx = (float)_buffer.data.vx / 100.0f;
+			_vy = (float)_buffer.data.vy / 100.0f;
+			_vz = (float)_buffer.data.vz / 100.0f;
+			_x = _buffer.data.px;
+			_y = _buffer.data.py;
+			_z = (float)_buffer.data.pz / 100.0f;
+			return true;
+		}
+	}
+	return false;
 }

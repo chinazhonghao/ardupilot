@@ -4,6 +4,19 @@
 #include "stdio.h"
 #include <AP_Common/AP_Common.h>
 
+struct PACKED NAVIGATION_MSG
+{
+	int16_t roll;
+	int16_t pitch;
+	uint16_t yaw;
+	int16_t vx;
+	int16_t vy;
+	int16_t vz;
+	float px;
+	float py;
+	int16_t pz;
+};
+
 // define the structure to store the data
 class NavigationMSG
 {
@@ -11,10 +24,11 @@ public:
 	NavigationMSG();
 	~NavigationMSG();
 
-	int16_t get_roll();
-	int16_t get_pitch();
-	uint16_t get_yaw();
-	bool get_parsed();
+	int16_t get_roll() { return _roll; }
+	int16_t get_pitch() { return _pitch; }
+	uint16_t get_yaw() { return _yaw; }
+	bool is_attitude_parsed() { return _attitude_parsed; }
+	bool is_pos_parsed() { return _pos_parsed; }
 
 	float get_vx() { return _vx; }
 	float get_vy() { return _vy; }
@@ -31,31 +45,32 @@ public:
 	float get_gy() { return _gy; }
 	float get_gz() { return _gz; }
 
-	void set_roll(int16_t temp);
-	void set_pitch(int16_t temp);
-	void set_yaw(uint16_t temp);
-	void set_parsed(bool temp);
+	void set_roll(int16_t temp) { _roll = temp; }
+	void set_pitch(int16_t temp) { _pitch = temp; }
+	void set_yaw(uint16_t temp) { _yaw = temp; }
+	void set_attitude_parsed(bool temp) { _attitude_parsed = temp; }
+	void set_pos_parsed(bool temp) { _pos_parsed = temp; }
 
 	void update();
 
-	struct PACKED floatData
-	{
-		float vx;
-		float vy;
-		float vz;
-		float x;
-		float y;
-		float z;
-	};
-
 	union PACKED
 	{
-		struct floatData data;
-		uint8_t bytes[sizeof(struct floatData)];
+		struct NAVIGATION_MSG data;
+		uint8_t bytes[sizeof(struct NAVIGATION_MSG)];
 	}_buffer;
+
+	enum NAVIGATION_PROTOCOL_BYTES
+	{
+		PREAMBLE1 = 0xB5,
+		PREAMBLE2 = 0x62,
+		CLASS_NAV = 0x01,
+		CLASS_SENSOR = 0x02,
+		MSG_NAV_MSG = 0xFE
+	};
 
 private:
 	void analysisMSG(uint8_t temp);
+	bool _parse_navigation();
 
 	int16_t _roll;
 	int16_t _pitch;
@@ -76,13 +91,16 @@ private:
 	float _gy;
 	float _gz;
 
-	int16_t _t_roll;
-	int16_t _t_pitch;
-	uint16_t _t_yaw;
-	bool _t_parsed;
-	uint8_t _t_count;
+	bool _attitude_parsed;
+	bool _pos_parsed;
 
 	uint8_t _step;
+	uint8_t _class;
+	uint8_t _msg_id;
+	uint8_t _ck_a;
+	uint8_t _ck_b;
+	uint16_t _payload_length;
+	uint16_t _payload_counter;
 };
 
 #endif
