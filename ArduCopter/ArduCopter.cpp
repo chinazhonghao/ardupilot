@@ -140,6 +140,9 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 #if EPM_ENABLED == ENABLED
     SCHED_TASK(epm_update,            10,     75),
 #endif
+#ifdef USERHOOK_200HZLOOP
+	SCHED_TASK(userhook_200Hz,       200,     250),
+#endif
 #ifdef USERHOOK_FASTLOOP
     SCHED_TASK(userhook_FastLoop,    100,     75),
 #endif
@@ -288,16 +291,6 @@ void Copter::fast_loop()
     if (should_log(MASK_LOG_ANY)) {
         Log_Sensor_Health();
     }
-
-	// here to collect the data from the telem2--hal.uartD
-	int16_t data_num = hal.uartD->available();
-	//hal.uartE->printf("num%d\n",data_num);
-	for(int16_t i = 0; i< data_num; i++)
-	{
-		nav_buffer[nav_buffer_tail] = hal.uartD->read();
-		//hal.uartE->printf("%x ",nav_buffer[nav_buffer_tail]);
-		nav_buffer_tail = (nav_buffer_tail+1)%512;
-	}
 }
 
 // rc_loops - reads user input from transmitter/receiver
