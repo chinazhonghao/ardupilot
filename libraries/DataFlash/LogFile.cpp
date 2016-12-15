@@ -1114,7 +1114,7 @@ void DataFlash_Class::Log_Write_NAVIGATION(AP_AHRS_NavEKF &ahrs, NavigationMSG &
 		pitch : (int16_t)(degrees(ahrs.pitch)*100),
 		yaw : (uint16_t)(wrap_360_cd(degrees(ahrs.yaw)*100))
 	};
-	hal.uartE->printf("yaw%.2f\n",ahrs.yaw*57.3);
+	//hal.uartE->printf("yaw%.2f\n",ahrs.yaw*57.3);
 	nav_msg.set_attitude_parsed(false);
 	WriteBlock(&pkt, sizeof(pkt));
 }
@@ -1127,8 +1127,8 @@ void DataFlash_Class::Log_Write_NAVIGATIONVP(AP_AHRS_NavEKF &ahrs, NavigationMSG
 	}
 	Vector3f velNED;
 	Vector3f posNED;
-	ahrs.get_NavEKF().getVelNED(velNED);
-	ahrs.get_NavEKF().getPosNED(posNED);
+	ahrs.get_NavEKF2().getVelNED(0,velNED);
+	ahrs.get_NavEKF2().getPosNED(0,posNED);
 	struct log_NAVIGATION_VP pkt =
 	{
 		LOG_PACKET_HEADER_INIT(LOG_NAVIGATIONVP_MSG),
