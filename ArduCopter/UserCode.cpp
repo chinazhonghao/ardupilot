@@ -41,7 +41,7 @@ void Copter::userhook_FastLoop()
 	DataFlash.Log_Write_NAVIGATION(ahrs, nav_msg);
 	DataFlash.Log_Write_NAVIGATIONVP(ahrs, nav_msg);
 	//hal.uartE->printf("vx%.3f,vy%.3f,vz%.3f,x%.3f,y%.3f,z%.3f\n", nav_msg.get_vx(),nav_msg.get_vy(),nav_msg.get_vz(),nav_msg.get_x(),nav_msg.get_y(),nav_msg.get_z());
-	hal.uartE->printf("r%d,p%d,y%.2f\n",nav_msg.get_roll(),nav_msg.get_pitch(),ahrs.yaw*57.3);
+	//hal.uartE->printf("r%d,p%d,y%.2f\n",nav_msg.get_roll(),nav_msg.get_pitch(),ahrs.yaw*57.3);
 }
 #endif
 
