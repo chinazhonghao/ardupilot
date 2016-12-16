@@ -154,9 +154,9 @@ bool NavigationMSG::_parse_navigation()
 			_vx = (float)_buffer.data.vx / 100.0f;
 			_vy = (float)_buffer.data.vy / 100.0f;
 			_vz = (float)_buffer.data.vz / 100.0f;
-			_x = _buffer.data.px;
-			_y = _buffer.data.py;
-			_z = _buffer.data.pz;
+			_x = _buffer.data.px / 100.0;
+			_y = _buffer.data.py / 100.0;
+			_z = _buffer.data.pz / 100.0;
 			return true;
 		}
 	}
