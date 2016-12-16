@@ -50,7 +50,7 @@ void NavigationMSG::update()
 		nav_buffer_header++;
 		if(nav_buffer_header >= 512)
 		{
-			nav_buffer_header -= 512;
+			nav_buffer_header = 0;
 		}
 	}
 	return;
@@ -156,7 +156,7 @@ bool NavigationMSG::_parse_navigation()
 			_vz = (float)_buffer.data.vz / 100.0f;
 			_x = _buffer.data.px;
 			_y = _buffer.data.py;
-			_z = (float)_buffer.data.pz / 100.0f;
+			_z = _buffer.data.pz;
 			return true;
 		}
 	}

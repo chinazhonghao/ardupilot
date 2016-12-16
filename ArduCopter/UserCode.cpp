@@ -26,7 +26,7 @@ void Copter::userhook_200Hz()
 		nav_buffer_tail++;
 		if(nav_buffer_tail >= 512)
 		{
-			nav_buffer_tail -= 512;
+			nav_buffer_tail = 0;
 		}
 	}
 }

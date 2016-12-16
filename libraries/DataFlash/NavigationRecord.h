@@ -14,7 +14,7 @@ struct PACKED NAVIGATION_MSG
 	int16_t vz;
 	float px;
 	float py;
-	int16_t pz;
+	float pz;
 };
 
 // define the structure to store the data
