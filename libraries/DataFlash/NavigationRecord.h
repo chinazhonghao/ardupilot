@@ -9,9 +9,9 @@ struct PACKED NAVIGATION_MSG
 	int16_t roll;
 	int16_t pitch;
 	uint16_t yaw;
-	int16_t vx;
-	int16_t vy;
-	int16_t vz;
+	float vx;
+	float vy;
+	float vz;
 	float px;
 	float py;
 	float pz;
