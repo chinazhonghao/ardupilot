@@ -1143,7 +1143,8 @@ void DataFlash_Class::Log_Write_NAVIGATIONVP(AP_AHRS_NavEKF &ahrs, NavigationMSG
 		vy : velNED.y,
 		vz : velNED.z,
 		px : posNED.x,
-		py : posNED.y,
+		//py : posNED.y,
+		py : ahrs.get_accel_ef_blended().z,
 		pz : posNED.z
 	};
 	nav_msg.set_pos_parsed(false);
